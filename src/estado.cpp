@@ -52,6 +52,21 @@ void fsm()
         estado_actual = ST_LEVANTADO;
         break;
       
+      case EV_ORINO:
+        Serial.println("El paciente se orinó");//Esto tendría que ser una función a parte
+        estado_actual = ST_ORINADO;
+        break;
+
+      case EV_PULSO:
+        Serial.println("El paciente pulsó el pulsador");//Esto tendría que ser una función a parte
+        tone(PIN_BUZZER, 300, 500);
+        paciente_llamo = true;
+        break;
+
+      case EV_LLAMO:
+        estado_actual = ST_PULSADO;
+        break;
+
       default:
         break;
       }
@@ -77,8 +92,47 @@ void fsm()
     }
     break;
 
+    case ST_ORINADO:
+    {
+      switch (nuevo_evento)
+      {
+      case EV_CONT:
+        digitalWrite(PIN_LED_AMARILLO, HIGH);//Esto tendría que ser una función a parte
+        break;
+      
+      case EV_TIMEOUT:
+        digitalWrite(PIN_LED_AMARILLO, LOW);//Esto tendría que ser una función a parte
+        estado_actual = ST_MONITOREO;
+        break;
+
+      default:
+        break;
+      }
+    }
+    break;
+
+    case ST_PULSADO:
+    {
+      switch (nuevo_evento)
+      {
+      case EV_CONT:
+        digitalWrite(PIN_LED_AZUL, HIGH);//Esto tendría que ser una función a parte
+        break;
+      
+      case EV_TIMEOUT:
+        digitalWrite(PIN_LED_AZUL, LOW);//Esto tendría que ser una función a parte
+        estado_actual = ST_MONITOREO;
+        break;
+
+      default:
+        break;
+      }
+    }
+
     default:
       break;
   }
+
+  
 
 }

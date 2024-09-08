@@ -8,7 +8,7 @@ void setup() {
   //Configuramos los sensores
   pinMode(PIN_PRESION, INPUT);
   pinMode(PIN_PULSADOR, INPUT);
-  //sensor_humedad.begin(); //El sensor de humedad empieza a funcionar
+  sensor_humedad.begin(); //El sensor de humedad empieza a funcionar
 
   //Configuramos los actuadores
   pinMode(PIN_LED_AMARILLO, OUTPUT);
