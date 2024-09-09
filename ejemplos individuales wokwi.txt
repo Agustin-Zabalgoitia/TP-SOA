@@ -1,0 +1,6 @@
+En los siguientes links se pueden ver ejemplos de los sensores y actuadores funcionando de manera individual.
+
+Pulsador y led: https://wokwi.com/projects/408570666110479361
+Pulsador y Buzzer: https://wokwi.com/projects/407384958250525697
+Sensor de humedad DHT22: https://wokwi.com/projects/407393022797148161
+Potenciómetro (no encontré un sensor de presión en wokwi): https://wokwi.com/projects/408571544225955841

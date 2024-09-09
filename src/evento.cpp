@@ -4,7 +4,6 @@
 //por lo que se tiene que ejecutar este código para que se
 //declaren los valores de los eventos y otras variables
 unsigned long ultimo_tiempo_actual = 0;
-unsigned long tiempo_leer_llamada_humedad = TIEMPO_LEER_SENSORES;
 unsigned long tiempo_lectura_presion = 0;
 unsigned long tiempo_lectura_humedad = 0;
 unsigned long tiempo_evento_llamada = 0;
@@ -46,7 +45,7 @@ bool consultar_llamada(bool forzar, unsigned long tiempo_actual)
 
   unsigned long diferencia = (forzar)?(TIEMPO_LEER_SENSORES):(tiempo_actual - tiempo_evento_llamada);
 
-  if(diferencia >= tiempo_leer_llamada_humedad)
+  if(diferencia >= TIEMPO_LEER_SENSORES)
   {
     tiempo_evento_llamada = tiempo_actual;
 
@@ -68,7 +67,7 @@ bool sensar_humedad(bool forzar, unsigned long tiempo_actual)
   // obtenemos el tiempo transcurrido entre el tiempo actual y la última vez que se midió la humedad
   unsigned long diferencia = (forzar) ? (TIEMPO_LEER_SENSORES) : (tiempo_actual - tiempo_lectura_humedad);
 
-  if (diferencia >= tiempo_leer_llamada_humedad)
+  if (diferencia >= TIEMPO_LEER_SENSORES)
   {
     tiempo_lectura_humedad = tiempo_actual;
 
