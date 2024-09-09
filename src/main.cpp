@@ -4,10 +4,17 @@
 
 void setup() {
   Serial.begin(BAUDRATE);
-  
+
+  //Configuración de los pulsadores  
+  pulsadorLlamar.pin = PIN_PULSADOR;
+  pulsadorAplazar.pin = PIN_PULSADOR_APLAZAR;
+  pulsadorConfirmar.pin = PIN_PULSADOR_CONFIRMAR;
+
   //Configuramos los sensores
   pinMode(PIN_PRESION, INPUT);
   pinMode(PIN_PULSADOR, INPUT);
+  pinMode(PIN_PULSADOR_APLAZAR, INPUT);
+  pinMode(PIN_PULSADOR_CONFIRMAR, INPUT);
   sensor_humedad.begin(); //El sensor de humedad empieza a funcionar
 
   //Configuramos los actuadores
@@ -18,7 +25,7 @@ void setup() {
 }
 
 void loop() {
-  if(nuevo_evento != EV_CONT)
+  if(nuevo_evento != EV_CONT) //Esto es para evitar spam
     Serial.println("Estado: "+estados_string[estado_actual]+"  Evento: "+eventos_string[nuevo_evento]);
 
   fsm();

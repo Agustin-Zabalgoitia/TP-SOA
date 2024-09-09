@@ -2,13 +2,13 @@
 
 
 unsigned short ultimo_indice_lector_sensor = 0;
-String estados_string[] = {"ST_MONITOREO", "ST_ORINADO", "ST_LEVANTADO", "ST_PULSADO"};
+String estados_string[] = {"ST_MONITOREO", "ST_ORINADO", "ST_LEVANTADO", "ST_LLAMADO"};
 enum estados estado_actual;
 enum estados ultimo_estado;
 
 void get_event()
 {
-  //leemos los sensores
+  //Leemos los sensores
   unsigned short indice = 0;
   unsigned long tiempo_actual = millis();
   unsigned long diferencia = (tiempo_actual - ultimo_tiempo_actual);
@@ -35,7 +35,7 @@ void fsm()
   //Obtenemos un evento
   get_event();
 
-  //Nos fijamos si es válido
+  //Nos fijamos si el estado es válido
     //en caso de serlo actuamos de acuerdo al evento y al estado
 
   switch ( estado_actual )
@@ -46,25 +46,31 @@ void fsm()
       {
       case EV_LEVANTO:
         //Al ocurrir un evento hacemos una acción
-        Serial.println("El paciente se levantó");//Esto tendría que ser una función a parte
+        informarLevanto();
 
         //Cambiamos el estado
         estado_actual = ST_LEVANTADO;
         break;
       
       case EV_ORINO:
-        Serial.println("El paciente se orinó");//Esto tendría que ser una función a parte
+        informarOrino();
         estado_actual = ST_ORINADO;
         break;
 
       case EV_PULSO:
-        Serial.println("El paciente pulsó el pulsador");//Esto tendría que ser una función a parte
-        tone(PIN_BUZZER, 300, 500);
-        paciente_llamo = true;
+        llamadaPaciente();
         break;
 
       case EV_LLAMO:
-        estado_actual = ST_PULSADO;
+        estado_actual = ST_LLAMADO;
+        break;
+
+      case EV_APLAZO:
+        pausarActuadores();
+        break;
+
+      case EV_CONFIRMAR:
+        confirmarLlamada();
         break;
 
       default:
@@ -77,13 +83,22 @@ void fsm()
     {
       switch (nuevo_evento)
       {
+      case EV_ORINO:
       case EV_CONT:
-        digitalWrite(PIN_LED_ROJO, HIGH);//Esto tendría que ser una función a parte
+        digitalWrite(PIN_LED_ROJO, HIGH);
         break;
       
       case EV_TIMEOUT:
-        digitalWrite(PIN_LED_ROJO, LOW);//Esto tendría que ser una función a parte
+        digitalWrite(PIN_LED_ROJO, LOW);
         estado_actual = ST_MONITOREO;
+        break;
+
+      case EV_APLAZO:
+        pausarActuadores();
+        break;
+
+      case EV_CONFIRMAR:
+        confirmarLlamada();
         break;
 
       default:
@@ -97,12 +112,20 @@ void fsm()
       switch (nuevo_evento)
       {
       case EV_CONT:
-        digitalWrite(PIN_LED_AMARILLO, HIGH);//Esto tendría que ser una función a parte
+        digitalWrite(PIN_LED_AMARILLO, HIGH);
         break;
       
       case EV_TIMEOUT:
-        digitalWrite(PIN_LED_AMARILLO, LOW);//Esto tendría que ser una función a parte
+        digitalWrite(PIN_LED_AMARILLO, LOW);
         estado_actual = ST_MONITOREO;
+        break;
+
+      case EV_APLAZO:
+        pausarActuadores();
+        break;
+
+      case EV_CONFIRMAR:
+        confirmarLlamada();
         break;
 
       default:
@@ -111,17 +134,25 @@ void fsm()
     }
     break;
 
-    case ST_PULSADO:
+    case ST_LLAMADO:
     {
       switch (nuevo_evento)
       {
       case EV_CONT:
-        digitalWrite(PIN_LED_AZUL, HIGH);//Esto tendría que ser una función a parte
+        digitalWrite(PIN_LED_AZUL, HIGH);
         break;
       
       case EV_TIMEOUT:
-        digitalWrite(PIN_LED_AZUL, LOW);//Esto tendría que ser una función a parte
+        digitalWrite(PIN_LED_AZUL, LOW);
         estado_actual = ST_MONITOREO;
+        break;
+
+      case EV_APLAZO:
+        pausarActuadores();
+        break;
+
+      case EV_CONFIRMAR:
+        confirmarLlamada();
         break;
 
       default:
@@ -133,6 +164,53 @@ void fsm()
       break;
   }
 
-  
+}
 
+//Definición de funciones propias
+void pausarActuadores(){
+  tone(PIN_BUZZER, TONO_SOL, DURACION_BUZZER);
+  informarPausaActuadores();
+}
+
+void llamadaPaciente()
+{
+  paciente_llamo = true;
+  tone(PIN_BUZZER, TONO_SI, DURACION_BUZZER);
+  informarPulsoPaciente();
+}
+
+void confirmarLlamada()
+{
+  paciente_llamo = false;
+  tone(PIN_BUZZER, TONO_MI, DURACION_BUZZER);
+  informarConfirmacion();
+}
+
+//Idealmente, una vez implementada la aplicación para celulares,
+//estas funciones se encargarían de informar por medio de wifi
+//a la aplicación que ocurrió alguno de estos eventos.
+//De momento envían un mensaje por medio de Serial
+void informarPulsoPaciente()
+{
+  Serial.println("El paciente ha pulsado el botón de llamada");
+}
+
+void informarConfirmacion()
+{
+  Serial.println("Se ha confirmado la llamada del paciente");
+}
+
+void informarPausaActuadores()
+{
+  Serial.println("Se han pausado los actuadores"); //Esto todavía no ocurre
+}
+
+void informarLevanto()
+{
+  Serial.println("El paciente se levantó");
+}
+
+void informarOrino()
+{
+  Serial.println("El paciente se orinó");
 }

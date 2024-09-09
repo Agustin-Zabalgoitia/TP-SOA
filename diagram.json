@@ -60,6 +60,36 @@
       "left": 440.75,
       "rotate": 270,
       "attrs": { "value": "1000" }
+    },
+    {
+      "type": "wokwi-pushbutton-6mm",
+      "id": "btn2",
+      "top": 69,
+      "left": 486.4,
+      "rotate": 270,
+      "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-pushbutton-6mm",
+      "id": "btn3",
+      "top": 126.6,
+      "left": 486.4,
+      "rotate": 270,
+      "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r4",
+      "top": 157.55,
+      "left": 489.6,
+      "attrs": { "value": "1000" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r5",
+      "top": 51.95,
+      "left": 489.6,
+      "attrs": { "value": "1000" }
     }
   ],
   "connections": [
@@ -81,9 +111,12 @@
     [ "bb1:30b.j", "bb1:bn.24", "black", [ "v0" ] ],
     [ "pot1:SIG", "esp:2", "#8f4814", [ "v28.8", "h-19.6", "v48", "h-181.6", "v-57.6" ] ],
     [ "bb1:28b.j", "esp:15", "gold", [ "v67.2", "h-297.6", "v-57.6" ] ],
-    [ "bb1:32t.a", "esp:17", "gold", [ "h9.6", "v182.4", "h-374.4", "v-115.2" ] ],
+    [ "bb1:32t.a", "esp:17", "gold", [ "h9.6", "v182.4", "h-355.2", "v-115.2" ] ],
     [ "bb1:bn.50", "bb1:tn.50", "black", [ "v0" ] ],
     [ "bb1:bp.49", "bb1:tp.49", "red", [ "v0" ] ],
+    [ "bb1:3b.j", "bb1:bp.2", "red", [ "v19.2", "h9.6" ] ],
+    [ "bb1:34t.a", "esp:19", "green", [ "v-57.6", "h-364.8", "v105.6" ] ],
+    [ "bb1:34b.j", "esp:18", "green", [ "v86.4", "h-374.4", "v-144" ] ],
     [ "dht1:VCC", "bb1:27b.g", "", [ "$bb" ] ],
     [ "dht1:SDA", "bb1:28b.g", "", [ "$bb" ] ],
     [ "dht1:NC", "bb1:29b.g", "", [ "$bb" ] ],
@@ -109,7 +142,22 @@
     [ "r2:2", "bb1:24t.b", "", [ "$bb" ] ],
     [ "r3:1", "bb1:32b.f", "", [ "$bb" ] ],
     [ "r3:2", "bb1:32t.b", "", [ "$bb" ] ],
-    [ "bb1:3b.j", "bb1:bp.2", "red", [ "v19.2", "h9.6" ] ]
+    [ "btn2:1.l", "bb1:34t.e", "", [ "$bb" ] ],
+    [ "btn2:2.l", "bb1:36t.e", "", [ "$bb" ] ],
+    [ "btn2:1.r", "bb1:34t.b", "", [ "$bb" ] ],
+    [ "btn2:2.r", "bb1:36t.b", "", [ "$bb" ] ],
+    [ "btn3:1.l", "bb1:34b.i", "", [ "$bb" ] ],
+    [ "btn3:2.l", "bb1:36b.i", "", [ "$bb" ] ],
+    [ "btn3:1.r", "bb1:34b.f", "", [ "$bb" ] ],
+    [ "btn3:2.r", "bb1:36b.f", "", [ "$bb" ] ],
+    [ "btn3:2.l", "bb1:bp.29", "red", [ "v0" ] ],
+    [ "r4:2", "bb1:bn.32", "black", [ "v0" ] ],
+    [ "r4:1", "bb1:34b.j", "", [ "$bb" ] ],
+    [ "r4:2", "bb1:40b.j", "", [ "$bb" ] ],
+    [ "r5:1", "bb1:34t.a", "", [ "$bb" ] ],
+    [ "r5:2", "bb1:40t.a", "", [ "$bb" ] ],
+    [ "btn2:2.r", "bb1:tp.29", "red", [ "v0" ] ],
+    [ "r5:2", "bb1:tn.32", "black", [ "v0" ] ]
   ],
   "dependencies": {}
 }
