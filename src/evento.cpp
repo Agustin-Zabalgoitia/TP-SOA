@@ -121,7 +121,7 @@ bool sensar_llamada(bool forzar, unsigned long tiempo_actual)
 bool sensar_pulsador(pulsador *pulsador, eventos evento)
 {
   pulsador->estado_actual = digitalRead(pulsador->pin);
-  bool cambio = (pulsador->estado_actual == HIGH && pulsador->estado_anterior == LOW);
+  bool cambio = (pulsador->estado_actual == LOW && pulsador->estado_anterior == HIGH);
 
   if(cambio)
   {

@@ -13,9 +13,9 @@ void setup() {
   //Configuramos los sensores
   pinMode(PIN_PRESION, INPUT);
   pinMode(PIN_HUMEDAD, INPUT);
-  pinMode(PIN_PULSADOR, INPUT);
-  pinMode(PIN_PULSADOR_APLAZAR, INPUT);
-  pinMode(PIN_PULSADOR_CONFIRMAR, INPUT);
+  pinMode(PIN_PULSADOR, INPUT_PULLUP);
+  pinMode(PIN_PULSADOR_APLAZAR, INPUT_PULLUP);
+  pinMode(PIN_PULSADOR_CONFIRMAR, INPUT_PULLUP);
 
 
   //Configuramos los actuadores
@@ -23,14 +23,12 @@ void setup() {
   //Configuramos el lcd
   Wire.begin(21, 22);
   lcd.begin(16, 2);
+  apagarFondoLCD();
 }
 
 void loop() {
-  Serial.println(analogRead(PIN_HUMEDAD));
-  /*
   if(nuevo_evento != EV_CONT) //Esto es para evitar spam
     Serial.println("Estado: "+estados_string[estado_actual]+"  Evento: "+eventos_string[nuevo_evento]);
-  */
+
   fsm();
-  delay(10); //Según wokwi esto mejora la simulación, hay que sacarlo antes de entregar el tp
 }
