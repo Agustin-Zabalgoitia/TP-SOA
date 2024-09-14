@@ -8,13 +8,15 @@ unsigned long tiempo_lectura_presion = 0;
 unsigned long tiempo_lectura_humedad = 0;
 unsigned long tiempo_evento_llamada = 0;
 unsigned long tiempo_evento_timeout = 0;
+unsigned long tiempo_evento_timeout_aplazo = 0;
 bool paciente_llamo = false;
+bool aplazado = false;
 
 //Guardamos los nombres de los eventos para informar por pantalla
 String eventos_string[] = {"EV_CONT", "EV_ORINO", "EV_LEVANTO", "EV_PULSO", "EV_LLAMO", "EV_APLAZO", "EV_CONFIRMAR", "EV_TIMEOUT"};
 
 //Guardamos los punteros de las funciones que leen el estado de los sensores
-lectorSensor lector_sensor[] = {sensar_presion, sensar_humedad, consultar_llamada, sensar_llamada, sensar_aplazo, sensar_confirmacion, consultar_timeout};
+lectorSensor lector_sensor[] = {sensar_presion, sensar_humedad, consultar_llamada, sensar_llamada, sensar_aplazo, sensar_confirmacion, consultar_timeout, consultar_timeout_aplazo};
 
 //Creamos variables para guardar el último evento ocurrido y el nuevo evento
 enum eventos nuevo_evento;
@@ -151,4 +153,15 @@ bool consultar_timeout(bool forzar, unsigned long tiempo_actual)
   }
 
   return false;
+}
+
+bool consultar_timeout_aplazo(bool forzar, unsigned long tiempo_actual)
+{
+    if(aplazado == true && tiempo_actual - tiempo_evento_timeout_aplazo >= TIEMPO_APLAZO)
+    {
+      nuevo_evento = EV_APLAZO;
+      return true;
+    }
+
+    return false;
 }

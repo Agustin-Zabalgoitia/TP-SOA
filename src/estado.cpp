@@ -25,6 +25,7 @@ void get_event()
     if(lector_sensor[indice](false, tiempo_actual))
       return; //Si los sensores detectaron un evento salimos para atenderlo en fsm
   }
+
   //Si los sensores no detectaron un nuevo evento, continuamos
   nuevo_evento = EV_CONT;
 }
@@ -36,7 +37,7 @@ void fsm()
   get_event();
 
   //Nos fijamos si el estado es válido
-    //en caso de serlo actuamos de acuerdo al evento y al estado
+  //en caso de serlo actuamos de acuerdo al evento y al estado
 
   switch ( estado_actual )
   {
@@ -65,12 +66,13 @@ void fsm()
         estado_actual = ST_LLAMADO;
         break;
 
-      case EV_APLAZO:
-        pausarActuadores();
-        break;
-
       case EV_CONFIRMAR:
         confirmarLlamada();
+        break;
+
+      case EV_TIMEOUT_APLAZO:
+        volverDelAplazo();
+        estado_actual = ultimo_estado;
         break;
 
       default:
@@ -83,7 +85,6 @@ void fsm()
     {
       switch (nuevo_evento)
       {
-      case EV_ORINO:
       case EV_CONT:
         digitalWrite(PIN_LED_ROJO, HIGH);
         break;
@@ -91,10 +92,6 @@ void fsm()
       case EV_TIMEOUT:
         digitalWrite(PIN_LED_ROJO, LOW);
         estado_actual = ST_MONITOREO;
-        break;
-
-      case EV_APLAZO:
-        pausarActuadores();
         break;
 
       case EV_CONFIRMAR:
@@ -121,7 +118,8 @@ void fsm()
         break;
 
       case EV_APLAZO:
-        pausarActuadores();
+        aplazar(ST_ORINADO);
+        estado_actual = ST_MONITOREO;
         break;
 
       case EV_CONFIRMAR:
@@ -148,7 +146,8 @@ void fsm()
         break;
 
       case EV_APLAZO:
-        pausarActuadores();
+        aplazar(ST_LLAMADO);
+        estado_actual = ST_MONITOREO;
         break;
 
       case EV_CONFIRMAR:
@@ -167,9 +166,30 @@ void fsm()
 }
 
 //Definición de funciones propias
+void aplazar(estados estado)
+{
+  pausarActuadores();
+  ultimo_estado = estado;
+  aplazado = true;
+  tiempo_evento_timeout_aplazo = millis();
+}
+
+void volverDelAplazo()
+{
+  reanudarActuadores();
+  aplazado = false;
+  tiempo_evento_timeout_aplazo = 0;
+}
+
 void pausarActuadores(){
   tone(PIN_BUZZER, TONO_SOL, DURACION_BUZZER);
   informarPausaActuadores();
+}
+
+void reanudarActuadores(){
+
+  informarReanudacionActuadores();
+
 }
 
 void llamadaPaciente()
@@ -203,6 +223,11 @@ void informarConfirmacion()
 void informarPausaActuadores()
 {
   Serial.println("Se han pausado los actuadores"); //Esto todavía no ocurre
+}
+
+void informarReanudacionActuadores()
+{
+  Serial.println("Se han reanudado los actuadores");
 }
 
 void informarLevanto()

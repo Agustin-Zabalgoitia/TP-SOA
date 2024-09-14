@@ -30,8 +30,8 @@ extern unsigned long tiempo_evento_timeout;
 extern unsigned long temporizador_aplazo;
 
 //Definición de Eventos
-#define MAX_EVENTOS 8
-enum eventos {EV_CONT, EV_ORINO, EV_LEVANTO, EV_PULSO, EV_LLAMO, EV_APLAZO, EV_CONFIRMAR, EV_TIMEOUT};
+#define MAX_EVENTOS 9
+enum eventos {EV_CONT, EV_ORINO, EV_LEVANTO, EV_PULSO, EV_LLAMO, EV_APLAZO, EV_CONFIRMAR, EV_TIMEOUT, EV_TIMEOUT_APLAZO};
 extern String eventos_string[MAX_EVENTOS];
 
 extern enum eventos nuevo_evento;
@@ -45,13 +45,20 @@ bool sensar_llamada(bool forzar, unsigned long tiempo_actual);
 bool sensar_aplazo(bool forzar, unsigned long tiempo_actual);
 bool sensar_confirmacion(bool forzar, unsigned long tiempo_actual);
 bool consultar_timeout(bool forzar, unsigned long tiempo_actual);
+bool consultar_timeout_aplazo(bool forzar, unsigned long tiempo_actual);
 
-#define MAX_LECTORES 7
+#define MAX_LECTORES 8
 typedef bool (*lectorSensor)(bool forzar, unsigned long tiempo_actual); // Definimos como deben ser las funciones para leer sensores
 extern lectorSensor lector_sensor[MAX_LECTORES];
 
 //Variable que indica si el paciente llamó o no a la enfermera
 extern bool paciente_llamo;
+
+//Variable para determinar si un evento se aplazó.
+extern bool aplazado;
+
+//Variable para conocer el tiempo en el que se inició un aplazo.
+extern unsigned long tiempo_evento_timeout_aplazo;
 
 //Estructura para guardar los datos de los pulsadores
 struct pulsador

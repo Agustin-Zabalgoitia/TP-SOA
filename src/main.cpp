@@ -6,9 +6,9 @@ void setup() {
   Serial.begin(BAUDRATE);
 
   //Configuración de los pulsadores  
-  pulsadorLlamar.pin = PIN_PULSADOR;
-  pulsadorAplazar.pin = PIN_PULSADOR_APLAZAR;
-  pulsadorConfirmar.pin = PIN_PULSADOR_CONFIRMAR;
+  pulsadorLlamar.pin = PIN_PULSADOR; //Es del paciente
+  pulsadorAplazar.pin = PIN_PULSADOR_APLAZAR; //Es del enfermero. Se encuentra en la habitación del paciente.
+  pulsadorConfirmar.pin = PIN_PULSADOR_CONFIRMAR; //Es del enfermero. Se encuentra en su pulsera.
 
   //Configuramos los sensores
   pinMode(PIN_PRESION, INPUT);

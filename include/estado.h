@@ -38,5 +38,9 @@ void informarConfirmacion       ();
 void informarPausaActuadores    ();
 void informarLevanto            ();
 void informarOrino              ();
+void volverDelAplazo            ();
+void reanudarActuadores         ();
+void aplazar                    (estados e);
+void informarReanudacionActuadores ();
 
 #endif
