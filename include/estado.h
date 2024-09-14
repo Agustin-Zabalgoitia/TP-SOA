@@ -6,8 +6,13 @@
 #include "rgb_lcd.h"
 
 //Pines de los actuadores
-#define PIN_BUZZER        34
+#define PIN_BUZZER      32
+#define PIN_SDA         21
+#define PIN_SCL         22
 extern rgb_lcd lcd;
+
+#define LCD_COLUMNAS    16 //Columnas a mostrar en el display
+#define LCD_FILAS       2  //Filas a mostrar en el display
 
 #define TIEMPO_ENTRE_CICLOS_DE_EJECUCION    50 //milisegundos
 

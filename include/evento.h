@@ -14,7 +14,7 @@
 #define TIEMPO_LEER_SENSORES    500     // Cada cuanto tiempo se leerán los sensores sin aplazo
 #define TIEMPO_TIMEOUT          500     // Cada cuanto tiempo se producirá un evento de timeout
 #define TIEMPO_APLAZO           120000  // Cada cuanto tiempo se leerán los sensores con aplazo
-#define UMBRAL_PRESION          1500    // Valor de presión a detectar para que se considere que hay algo encima del sensor
+#define UMBRAL_PRESION          1000    // Valor de presión a detectar para que se considere que hay algo encima del sensor
 #define UMBRAL_HUMEDAD          1000    // Valor de humedad a detectar para que se considere que haya orina en el papagayo
 
 //Variables de tiempo de los sensores

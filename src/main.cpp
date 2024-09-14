@@ -21,8 +21,8 @@ void setup() {
   //Configuramos los actuadores
   pinMode(PIN_BUZZER, OUTPUT);
   //Configuramos el lcd
-  Wire.begin(21, 22);
-  lcd.begin(16, 2);
+  Wire.begin(PIN_SDA, PIN_SCL);
+  lcd.begin(LCD_COLUMNAS, LCD_FILAS);
   apagarFondoLCD();
 }
 
