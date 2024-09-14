@@ -20,9 +20,6 @@ lectorSensor lector_sensor[] = {sensar_presion, sensar_humedad, consultar_llamad
 enum eventos nuevo_evento;
 enum eventos ultimo_evento;
 
-//Inicializamos el sensor DHT
-DHT sensor_humedad(PIN_HUMEDAD, DHTYPE);
-
 //Configuración de los pulsadores  
 pulsador pulsadorLlamar;
 pulsador pulsadorAplazar;
@@ -71,7 +68,7 @@ bool sensar_humedad(bool forzar, unsigned long tiempo_actual)
   {
     tiempo_lectura_humedad = tiempo_actual;
 
-    unsigned short valor_lectura = sensor_humedad.readHumidity(); //Lee la humedad
+    unsigned short valor_lectura = analogRead(PIN_HUMEDAD);
 
     if(valor_lectura >= UMBRAL_HUMEDAD)
     {

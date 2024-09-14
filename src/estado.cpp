@@ -6,6 +6,8 @@ String estados_string[] = {"ST_MONITOREO", "ST_ORINADO", "ST_LEVANTADO", "ST_LLA
 enum estados estado_actual;
 enum estados ultimo_estado;
 
+rgb_lcd lcd;
+
 void get_event()
 {
   //Leemos los sensores
@@ -85,11 +87,13 @@ void fsm()
       {
       case EV_ORINO:
       case EV_CONT:
-        digitalWrite(PIN_LED_ROJO, HIGH);
+        //digitalWrite(PIN_LED_ROJO, HIGH);
+        encenderFondoLCD(ROJO);
         break;
       
       case EV_TIMEOUT:
-        digitalWrite(PIN_LED_ROJO, LOW);
+        //digitalWrite(PIN_LED_ROJO, LOW);
+        apagarFondoLCD();
         estado_actual = ST_MONITOREO;
         break;
 
@@ -112,11 +116,13 @@ void fsm()
       switch (nuevo_evento)
       {
       case EV_CONT:
-        digitalWrite(PIN_LED_AMARILLO, HIGH);
+        //digitalWrite(PIN_LED_AMARILLO, HIGH);
+        encenderFondoLCD(AMARILLO);
         break;
       
       case EV_TIMEOUT:
-        digitalWrite(PIN_LED_AMARILLO, LOW);
+        //digitalWrite(PIN_LED_AMARILLO, LOW);
+        apagarFondoLCD();
         estado_actual = ST_MONITOREO;
         break;
 
@@ -139,11 +145,13 @@ void fsm()
       switch (nuevo_evento)
       {
       case EV_CONT:
-        digitalWrite(PIN_LED_AZUL, HIGH);
+        //digitalWrite(PIN_LED_AZUL, HIGH);
+        encenderFondoLCD(AZUL);
         break;
       
       case EV_TIMEOUT:
-        digitalWrite(PIN_LED_AZUL, LOW);
+        //digitalWrite(PIN_LED_AZUL, LOW);
+        apagarFondoLCD();
         estado_actual = ST_MONITOREO;
         break;
 
@@ -184,6 +192,30 @@ void confirmarLlamada()
   paciente_llamo = false;
   tone(PIN_BUZZER, TONO_MI, DURACION_BUZZER);
   informarConfirmacion();
+}
+
+void encenderFondoLCD(colores color){
+  switch (color)
+  {
+  case AZUL:
+    lcd.setRGB(0,0,255);
+    break;
+  
+  case AMARILLO:
+    lcd.setRGB(255,255,0);
+    break;
+
+  case ROJO:
+    lcd.setRGB(255,0,0);
+    break;
+
+  default:
+    break;
+  }
+}
+
+void apagarFondoLCD(){
+  lcd.setRGB(0,0,0);
 }
 
 //Idealmente, una vez implementada la aplicación para celulares,

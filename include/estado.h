@@ -2,12 +2,12 @@
 #define ESTADO_H_
 
 #include <evento.h>
+#include <Wire.h>
+#include "rgb_lcd.h"
 
 //Pines de los actuadores
-#define PIN_BUZZER        0
-#define PIN_LED_AMARILLO  17
-#define PIN_LED_AZUL      16
-#define PIN_LED_ROJO      5
+#define PIN_BUZZER        34
+extern rgb_lcd lcd;
 
 #define TIEMPO_ENTRE_CICLOS_DE_EJECUCION    50 //milisegundos
 
@@ -26,12 +26,17 @@ extern String estados_string[MAX_ESTADOS];
 extern enum estados estado_actual;
 extern enum estados ultimo_estado;
 
+//Definición de enums para los colores del fondo del LCD
+enum colores {AZUL, AMARILLO, ROJO};
+
 //Funciones
 void get_event                  ();
 void fsm                        (); //Máquina de estados
 void pausarActuadores           ();
 void llamadaPaciente            ();
 void confirmarLlamada           ();
+void encenderFondoLCD    (colores);
+void apagarFondoLCD             ();
 //Funciones encargadas de informar, de momento mediante Serial.print, que ocurrió algo
 void informarPulsoPaciente      ();
 void informarConfirmacion       ();
