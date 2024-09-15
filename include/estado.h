@@ -12,7 +12,7 @@
 #define TIEMPO_ENTRE_CICLOS_DE_EJECUCION    50 //milisegundos
 
 //Definición de los tonos del buzzer
-#define TONO_SI         247
+#define TONO_SI         440
 #define TONO_SOL        196
 #define TONO_MI         165
 #define DURACION_BUZZER 300 //en milisegundos
@@ -42,5 +42,7 @@ void volverDelAplazo            ();
 void reanudarActuadores         ();
 void aplazar                    (estados e);
 void informarReanudacionActuadores ();
+void apagarTodosLosLEDs();
+void reproducirMelodia();
 
 #endif

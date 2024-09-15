@@ -16,9 +16,9 @@
 extern DHT sensor_humedad; //Objeto del sensor de humedad
 
 // Definición de Constantes
-#define TIEMPO_LEER_SENSORES    500     // Cada cuanto tiempo se leerán los sensores sin aplazo
+#define TIEMPO_LEER_SENSORES    10000     // Cada cuanto tiempo se leerán los sensores sin aplazo
 #define TIEMPO_TIMEOUT          500     // Cada cuanto tiempo se producirá un evento de timeout
-#define TIEMPO_APLAZO           120000  // Cada cuanto tiempo se leerán los sensores con aplazo
+#define TIEMPO_APLAZO           10000  // Cada cuanto tiempo se leerán los sensores con aplazo
 #define UMBRAL_PRESION          1000    // Valor de presión a detectar para que se considere que hay algo encima del sensor
 #define UMBRAL_HUMEDAD          50      // Valor de humedad a detectar para que se considere que haya orina en el papagayo
 
@@ -31,7 +31,7 @@ extern unsigned long temporizador_aplazo;
 
 //Definición de Eventos
 #define MAX_EVENTOS 9
-enum eventos {EV_CONT, EV_ORINO, EV_LEVANTO, EV_PULSO, EV_LLAMO, EV_APLAZO, EV_CONFIRMAR, EV_TIMEOUT, EV_TIMEOUT_APLAZO};
+enum eventos {EV_CONT, EV_ORINO, EV_LEVANTO, EV_PULSO, EV_LLAMO, EV_APLAZO, EV_CONFIRMAR, EV_TIMEOUT, EV_TIMEOUT_APLAZO, EV_TIMEOUT_APLAZO_ORINADO, EV_TIMEOUT_APLAZO_PULSADO, EV_BOTON_CONFIRMAR};
 extern String eventos_string[MAX_EVENTOS];
 
 extern enum eventos nuevo_evento;
@@ -46,6 +46,9 @@ bool sensar_aplazo(bool forzar, unsigned long tiempo_actual);
 bool sensar_confirmacion(bool forzar, unsigned long tiempo_actual);
 bool consultar_timeout(bool forzar, unsigned long tiempo_actual);
 bool consultar_timeout_aplazo(bool forzar, unsigned long tiempo_actual);
+void apagarTodosLosLEDs();
+void confirmarLlamada();
+void reproducirMelodia();
 
 #define MAX_LECTORES 8
 typedef bool (*lectorSensor)(bool forzar, unsigned long tiempo_actual); // Definimos como deben ser las funciones para leer sensores
