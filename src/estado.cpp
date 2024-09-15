@@ -1,10 +1,14 @@
 #include <estado.h>
 
-
 unsigned short ultimo_indice_lector_sensor = 0;
+//configuración inicial de los estados
 String estados_string[] = {"ST_MONITOREO", "ST_ORINADO", "ST_LEVANTADO", "ST_LLAMADO"};
 enum estados estado_actual;
 enum estados ultimo_estado;
+
+//Configuración inical del display
+LiquidCrystal_I2C lcd(LCD_ADDR, LCD_COLUMNAS, LCD_FILAS);
+unsigned long tiempo_lcd = 0; //temporizador del lcd
 
 void get_event()
 {
@@ -46,6 +50,8 @@ void fsm()
       {
       case EV_LEVANTO:
         //Al ocurrir un evento hacemos una acción
+        //Fuerza la actualización del lcd para que indique que pasamos al estado levantado
+        actualizarLCD(true, ST_LEVANTADO);
         informarLevanto();
 
         //Cambiamos el estado
@@ -53,6 +59,8 @@ void fsm()
         break;
       
       case EV_ORINO:
+        //Fuerza la actualización del lcd para que indique que pasamos al estado orinado
+        actualizarLCD(true, ST_ORINADO);
         informarOrino();
         estado_actual = ST_ORINADO;
         break;
@@ -62,6 +70,8 @@ void fsm()
         break;
 
       case EV_LLAMO:
+        //Fuerza la actualización del lcd para que indique que pasamos al estado llamado
+        actualizarLCD(true, ST_LLAMADO);
         estado_actual = ST_LLAMADO;
         break;
 
@@ -72,6 +82,10 @@ void fsm()
       case EV_CONFIRMAR:
         confirmarLlamada();
         break;
+
+      case EV_CONT:
+        //Actualiza el lcd para informar que estamos en el estado de monitoreo
+        actualizarLCD(false, ST_MONITOREO); 
 
       default:
         break;
@@ -184,6 +198,45 @@ void confirmarLlamada()
   paciente_llamo = false;
   tone(PIN_BUZZER, TONO_MI, DURACION_BUZZER);
   informarConfirmacion();
+}
+
+void actualizarLCD(bool forzar, estados estado)
+{
+    unsigned long tiempo = millis();
+
+    if(forzar || tiempo - tiempo_lcd > TIEMPO_ESCRITURA_LCD)
+    {
+        tiempo_lcd = tiempo;
+        lcd.clear();
+
+        switch (estado)
+        {
+        case ST_MONITOREO:
+            lcd.print("Monitoreando...");
+            break;
+        
+        case ST_LLAMADO:
+            lcd.print("Paciente");
+            lcd.setCursor(0,1);
+            lcd.print("llamo!");
+            break;
+
+        case ST_ORINADO:
+            lcd.print("Paciente se");
+            lcd.setCursor(0,1);
+            lcd.print("orino!");
+            break;
+
+        case ST_LEVANTADO:
+            lcd.print("Paciente se");
+            lcd.setCursor(0,1);
+            lcd.print("levanto!");
+            break;
+
+        default:
+            break;
+        }
+    }
 }
 
 //Idealmente, una vez implementada la aplicación para celulares,

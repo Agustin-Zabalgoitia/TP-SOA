@@ -1,9 +1,20 @@
 #include <estado.h>
 
-#define BAUDRATE 115200
+#define BAUDRATE      9600
 
 void setup() {
   Serial.begin(BAUDRATE);
+
+  Wire.begin(PIN_LCD_SDA, PIN_LCD_SCL);  
+  lcd.begin(LCD_COLUMNAS, LCD_FILAS);
+  lcd.backlight();
+
+  // Configuracion inicial del LCD
+  lcd.clear();
+  lcd.setCursor(LCD_COLUMNA_INICIAL, LCD_FILA_INICIAL);
+  lcd.print("Iniciando");
+  lcd.setCursor(0,1);
+  lcd.print("SmartCare Alert");
 
   //Configuración de los pulsadores  
   pulsadorLlamar.pin = PIN_PULSADOR;
@@ -29,5 +40,4 @@ void loop() {
     Serial.println("Estado: "+estados_string[estado_actual]+"  Evento: "+eventos_string[nuevo_evento]);
 
   fsm();
-  delay(10); //Según wokwi esto mejora la simulación, hay que sacarlo antes de entregar el tp
 }

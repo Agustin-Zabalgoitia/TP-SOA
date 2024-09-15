@@ -5,4 +5,4 @@ Pulsador y Buzzer: https://wokwi.com/projects/407384958250525697
 Sensor de humedad DHT22: https://wokwi.com/projects/407393022797148161
 Potenciómetro (no encontré un sensor de presión en wokwi): https://wokwi.com/projects/408571544225955841
 
-En el siguiente link se encuentra el proyecto simulado en wokwi por completo, incluyendo la máquina de estados y las funciones de eventos: https://wokwi.com/projects/409036314831169537
+En el siguiente link se encuentra el proyecto simulado en wokwi por completo, incluyendo la máquina de estados y las funciones de eventos: https://wokwi.com/projects/409126627744389121
