@@ -2,11 +2,11 @@
 
 unsigned short ultimo_indice_lector_sensor = 0;
 //configuración inicial de los estados
-String estados_string[] = {"ST_MONITOREO", "ST_ORINADO", "ST_LEVANTADO", "ST_LLAMADO"};
+String estados_string[] = {"ST_ESTABLE", "ST_PULSADO", "ST_ORINADO", "ST_LEVANTADO", "ST_APLAZADO"};
 enum estados estado_actual;
 enum estados ultimo_estado;
 
-//Configuración inical del display
+//Configuración inicial del display
 LiquidCrystal_I2C lcd(LCD_ADDR, LCD_COLUMNAS, LCD_FILAS);
 unsigned long tiempo_lcd = 0; //temporizador del lcd
 
@@ -30,7 +30,7 @@ void get_event()
       return; //Si los sensores detectaron un evento salimos para atenderlo en fsm
   }
   //Si los sensores no detectaron un nuevo evento, continuamos
-  nuevo_evento = EV_CONT;
+  nuevo_evento = EV_CONTINUE;
 }
 
 //Finite-State Machine
@@ -39,143 +39,206 @@ void fsm()
   //Obtenemos un evento
   get_event();
 
-  //Nos fijamos si el estado es válido
-    //en caso de serlo actuamos de acuerdo al evento y al estado
+  //Se valida el estado
+  //En caso de serlo, actuamos de acuerdo al evento y al estado
 
   switch ( estado_actual )
   {
-    case ST_MONITOREO:
+    case ST_ESTABLE:
     {
-      switch (nuevo_evento)
+      switch ( nuevo_evento )
       {
-      case EV_LEVANTO:
-        //Al ocurrir un evento hacemos una acción
-        //Fuerza la actualización del lcd para que indique que pasamos al estado levantado
-        actualizarLCD(true, ST_LEVANTADO);
-        informarLevanto();
-
-        //Cambiamos el estado
-        estado_actual = ST_LEVANTADO;
-        break;
-      
-      case EV_ORINO:
-        //Fuerza la actualización del lcd para que indique que pasamos al estado orinado
-        actualizarLCD(true, ST_ORINADO);
-        informarOrino();
-        estado_actual = ST_ORINADO;
+        case EV_PULSO:
+        {
+          actualizarLCD(true, ST_PULSADO);
+          llamadaPaciente();
+          estado_actual = ST_PULSADO;
+        }
         break;
 
-      case EV_PULSO:
-        llamadaPaciente();
+        case EV_ORINO:
+        {
+          actualizarLCD(true, ST_ORINADO);
+          informarOrino();
+          estado_actual = ST_ORINADO;
+        }
         break;
 
-      case EV_LLAMO:
-        //Fuerza la actualización del lcd para que indique que pasamos al estado llamado
-        actualizarLCD(true, ST_LLAMADO);
-        estado_actual = ST_LLAMADO;
+        case EV_LEVANTO:
+        {
+          actualizarLCD(true, ST_LEVANTADO);
+          informarLevanto();
+          estado_actual = ST_LEVANTADO;
+        }
+        break;
+        
+        case EV_CONTINUE:
+        {
+          actualizarLCD(false, ST_ESTABLE);
+        }
         break;
 
-      case EV_APLAZO:
-        pausarActuadores();
-        break;
-
-      case EV_CONFIRMAR:
-        confirmarLlamada();
-        break;
-
-      case EV_CONT:
-        //Actualiza el lcd para informar que estamos en el estado de monitoreo
-        actualizarLCD(false, ST_MONITOREO); 
-
-      default:
+        default:
         break;
       }
     }
     break;
-    
-    case ST_LEVANTADO:
+
+    case ST_PULSADO:
     {
-      switch (nuevo_evento)
+      switch ( nuevo_evento )
       {
-      case EV_ORINO:
-      case EV_CONT:
-        digitalWrite(PIN_LED_ROJO, HIGH);
-        break;
-      
-      case EV_TIMEOUT:
-        digitalWrite(PIN_LED_ROJO, LOW);
-        estado_actual = ST_MONITOREO;
+        case EV_CONFIRMO:
+        {
+          actualizarLCD(true, ST_ESTABLE);
+          confirmarLlamada();
+          estado_actual = ST_ESTABLE;
+        }
         break;
 
-      case EV_APLAZO:
-        pausarActuadores();
+        case EV_APLAZO:
+        {
+          actualizarLCD(true, ST_APLAZADO);
+          pausarActuadores();
+          ultimo_estado = ST_PULSADO;
+          estado_actual = ST_APLAZADO;
+        }
         break;
 
-      case EV_CONFIRMAR:
-        confirmarLlamada();
+        case EV_ORINO:
+        {
+          actualizarLCD(true, ST_ORINADO);
+          informarOrino();
+          estado_actual = ST_ORINADO;
+        }
         break;
 
-      default:
+        case EV_LEVANTO:
+        {
+          actualizarLCD(true, ST_LEVANTADO);
+          informarLevanto();
+          estado_actual = ST_LEVANTADO;
+        }
         break;
-      }
+        
+        case EV_CONTINUE:
+        {
+          actualizarLCD(false, ST_PULSADO);
+        }
+        break;
+
+        default:
+        break;
+        }
     }
     break;
 
     case ST_ORINADO:
     {
-      switch (nuevo_evento)
+      switch ( nuevo_evento )
       {
-      case EV_CONT:
-        digitalWrite(PIN_LED_AMARILLO, HIGH);
-        break;
-      
-      case EV_TIMEOUT:
-        digitalWrite(PIN_LED_AMARILLO, LOW);
-        estado_actual = ST_MONITOREO;
-        break;
-
-      case EV_APLAZO:
-        pausarActuadores();
+        case EV_CONFIRMO:
+        {
+          actualizarLCD(true, ST_ESTABLE);
+          confirmarLlamada();
+          estado_actual = ST_ESTABLE;
+        }
         break;
 
-      case EV_CONFIRMAR:
-        confirmarLlamada();
+        case EV_APLAZO:
+        {
+          actualizarLCD(true, ST_APLAZADO);
+          pausarActuadores();
+          ultimo_estado = ST_ORINADO;
+          estado_actual = ST_APLAZADO;
+        }
         break;
 
-      default:
+        case EV_LEVANTO:
+        {
+          actualizarLCD(true, ST_LEVANTADO);
+          informarLevanto();
+          estado_actual = ST_LEVANTADO;
+        }
         break;
-      }
+        
+        case EV_CONTINUE:
+        {
+          actualizarLCD(false, ST_ORINADO);
+        }
+        break;
+
+        default:
+        break;
+        }
+    }
+    break;
+    
+    case ST_LEVANTADO:
+    {
+      switch ( nuevo_evento )
+      {
+        case EV_CONFIRMO:
+        {
+          actualizarLCD(true, ST_ESTABLE);
+          confirmarLlamada();
+          estado_actual = ST_ESTABLE;
+        }
+        break;
+        
+        case EV_CONTINUE:
+        {
+          actualizarLCD(false, ST_LEVANTADO);
+        }
+        break;
+
+        default:
+        break;
+        }
     }
     break;
 
-    case ST_LLAMADO:
+    case ST_APLAZADO:
     {
-      switch (nuevo_evento)
+      switch ( nuevo_evento )
       {
-      case EV_CONT:
-        digitalWrite(PIN_LED_AZUL, HIGH);
-        break;
-      
-      case EV_TIMEOUT:
-        digitalWrite(PIN_LED_AZUL, LOW);
-        estado_actual = ST_MONITOREO;
-        break;
-
-      case EV_APLAZO:
-        pausarActuadores();
+        case EV_CONFIRMO:
+        {
+          actualizarLCD(true, ST_ESTABLE);
+          confirmarLlamada();
+          estado_actual = ST_ESTABLE;
+        }
         break;
 
-      case EV_CONFIRMAR:
-        confirmarLlamada();
+        case EV_LEVANTO:
+        {
+          actualizarLCD(true, ST_LEVANTADO);
+          informarLevanto();
+          estado_actual = ST_LEVANTADO;
+        }
         break;
 
-      default:
+        case EV_TIMEOUT:
+        {
+          actualizarLCD(true, ultimo_estado);
+          estado_actual = ultimo_estado;
+        }
         break;
-      }
+        
+        case EV_CONTINUE:
+        {
+          actualizarLCD(false, ST_APLAZADO);
+        }
+        break;
+
+        default:
+        break;
+        }
     }
+    break;
 
     default:
-      break;
+    break;
   }
 
 }
@@ -188,82 +251,107 @@ void pausarActuadores(){
 
 void llamadaPaciente()
 {
-  paciente_llamo = true;
   tone(PIN_BUZZER, TONO_SI, DURACION_BUZZER);
   informarPulsoPaciente();
 }
 
 void confirmarLlamada()
 {
-  paciente_llamo = false;
   tone(PIN_BUZZER, TONO_MI, DURACION_BUZZER);
   informarConfirmacion();
 }
 
 void actualizarLCD(bool forzar, estados estado)
 {
+    /*
+      Esta función imprime por una pantalla LCD el estado en el que se encuentra el SE.
+      La impresión por pantalla se realiza según un intervalo de tiempo definido por la constante "TIEMPO_ESCRITURA_LCD".
+      El parámetro "forzar" nos permite realizar la impresión aunque no se haya completado el intervalo de tiempo.
+      El parámetro "estado" nos permite indicar el estado que debe ser impreso.
+    */
+
     unsigned long tiempo = millis();
 
-    if(forzar || tiempo - tiempo_lcd > TIEMPO_ESCRITURA_LCD)
+    if(!forzar && tiempo - tiempo_lcd < TIEMPO_ESCRITURA_LCD)
     {
-        tiempo_lcd = tiempo;
-        lcd.clear();
-
-        switch (estado)
-        {
-        case ST_MONITOREO:
-            lcd.print("Monitoreando...");
-            break;
-        
-        case ST_LLAMADO:
-            lcd.print("Paciente");
-            lcd.setCursor(0,1);
-            lcd.print("llamo!");
-            break;
-
-        case ST_ORINADO:
-            lcd.print("Paciente se");
-            lcd.setCursor(0,1);
-            lcd.print("orino!");
-            break;
-
-        case ST_LEVANTADO:
-            lcd.print("Paciente se");
-            lcd.setCursor(0,1);
-            lcd.print("levanto!");
-            break;
-
-        default:
-            break;
-        }
+      return;
     }
+
+    tiempo_lcd = tiempo;
+    lcd.clear();
+
+    switch ( estado )
+    {
+      case ST_ESTABLE:
+      {
+        lcd.print("Paciente ");
+        lcd.setCursor(0,1);
+        lcd.print("estable");
+      }
+      break;
+        
+      case ST_PULSADO:
+      {
+        lcd.print("Paciente ");
+        lcd.setCursor(0,1);
+        lcd.print("llamando!");
+      }
+      break;
+
+      case ST_ORINADO:
+      {
+        lcd.print("Paciente ");
+        lcd.setCursor(0,1);
+        lcd.print("orinado!");
+      }
+      break;
+
+      case ST_LEVANTADO:
+      {
+        lcd.print("Paciente ");
+        lcd.setCursor(0,1);
+        lcd.print("levanto!");
+      }
+      break;
+
+      case ST_APLAZADO:
+      {
+        lcd.print("Aplazado");
+      }
+      break;
+
+      default:
+      break;
+    }
+    
 }
 
-//Idealmente, una vez implementada la aplicación para celulares,
-//estas funciones se encargarían de informar por medio de wifi
-//a la aplicación que ocurrió alguno de estos eventos.
-//De momento envían un mensaje por medio de Serial
+/*
+  Las siguientes funciones notifican a través de la consola la situación.
+  Estas notificaciones serán enviadas al celular una vez implementada la aplicación Android.
+*/
+
 void informarPulsoPaciente()
 {
-  Serial.println("El paciente ha pulsado el botón de llamada");
-}
-
-void informarConfirmacion()
-{
-  Serial.println("Se ha confirmado la llamada del paciente");
-}
-
-void informarPausaActuadores()
-{
-  Serial.println("Se han pausado los actuadores"); //Esto todavía no ocurre
-}
-
-void informarLevanto()
-{
-  Serial.println("El paciente se levantó");
+  Serial.println("El paciente ha pulsado el botón de llamada.");
 }
 
 void informarOrino()
 {
-  Serial.println("El paciente se orinó");
+  Serial.println("El paciente se ha orinado.");
+}
+
+void informarLevanto()
+{
+  Serial.println("El paciente se ha levantado.");
+}
+
+void informarConfirmacion()
+{
+  Serial.println("Se ha confirmado la llamada del paciente.");
+}
+
+void informarPausaActuadores()
+{
+  Serial.println("Se han pausado los actuadores."); //Esto todavía no ocurre
 }

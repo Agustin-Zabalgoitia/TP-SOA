@@ -17,8 +17,7 @@ extern DHT sensor_humedad; //Objeto del sensor de humedad
 
 // Definición de Constantes
 #define TIEMPO_LEER_SENSORES    500     // Cada cuanto tiempo se leerán los sensores sin aplazo
-#define TIEMPO_TIMEOUT          500     // Cada cuanto tiempo se producirá un evento de timeout
-#define TIEMPO_APLAZO           120000  // Cada cuanto tiempo se leerán los sensores con aplazo
+#define TIEMPO_TIMEOUT          120000     // Cada cuanto tiempo se producirá un evento de timeout
 #define UMBRAL_PRESION          1000    // Valor de presión a detectar para que se considere que hay algo encima del sensor
 #define UMBRAL_HUMEDAD          50      // Valor de humedad a detectar para que se considere que haya orina en el papagayo
 
@@ -30,8 +29,8 @@ extern unsigned long tiempo_evento_timeout;
 extern unsigned long temporizador_aplazo;
 
 //Definición de Eventos
-#define MAX_EVENTOS 8
-enum eventos {EV_CONT, EV_ORINO, EV_LEVANTO, EV_PULSO, EV_LLAMO, EV_APLAZO, EV_CONFIRMAR, EV_TIMEOUT};
+#define MAX_EVENTOS 7
+enum eventos {EV_CONTINUE, EV_PULSO, EV_ORINO, EV_LEVANTO, EV_CONFIRMO, EV_APLAZO, EV_TIMEOUT};
 extern String eventos_string[MAX_EVENTOS];
 
 extern enum eventos nuevo_evento;

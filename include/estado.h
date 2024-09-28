@@ -33,8 +33,8 @@ extern LiquidCrystal_I2C lcd;
 
 extern unsigned short ultimo_indice_lector_sensor;
 
-#define MAX_ESTADOS 4
-enum estados {ST_MONITOREO, ST_ORINADO, ST_LEVANTADO, ST_LLAMADO};
+#define MAX_ESTADOS 5
+enum estados {ST_ESTABLE, ST_PULSADO, ST_ORINADO, ST_LEVANTADO, ST_APLAZADO};
 extern String estados_string[MAX_ESTADOS];
 
 extern enum estados estado_actual;
@@ -49,9 +49,9 @@ void confirmarLlamada           ();
 void actualizarLCD              (bool, estados);
 //Funciones encargadas de informar, de momento mediante Serial.print, que ocurrió algo
 void informarPulsoPaciente      ();
+void informarOrino              ();
+void informarLevanto            ();
 void informarConfirmacion       ();
 void informarPausaActuadores    ();
-void informarLevanto            ();
-void informarOrino              ();
 
 #endif
