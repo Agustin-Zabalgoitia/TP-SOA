@@ -1,6 +1,7 @@
 #include <estado.h>
 
 unsigned short ultimo_indice_lector_sensor = 0;
+unsigned long ultima_llamada_buzzer = 0;
 //configuración inicial de los estados
 String estados_string[] = {"ST_ESTABLE", "ST_PULSADO", "ST_ORINADO", "ST_LEVANTADO", "ST_APLAZADO"};
 enum estados estado_actual;
@@ -92,12 +93,14 @@ void fsm()
         {
           actualizarLCD(true, ST_ESTABLE);
           confirmarLlamada();
+          pausarActuadores();
           estado_actual = ST_ESTABLE;
         }
         break;
 
         case EV_APLAZO:
         {
+          aplazado = true;
           actualizarLCD(true, ST_APLAZADO);
           pausarActuadores();
           ultimo_estado = ST_PULSADO;
@@ -124,6 +127,13 @@ void fsm()
         case EV_CONTINUE:
         {
           actualizarLCD(false, ST_PULSADO);
+
+          if (millis() - ultima_llamada_buzzer > TIEMPO_INTERVALO_BUZZER){
+            llamadaPaciente();
+            ultima_llamada_buzzer = millis();
+          }
+
+          
         }
         break;
 
@@ -147,6 +157,7 @@ void fsm()
 
         case EV_APLAZO:
         {
+          aplazado = true;
           actualizarLCD(true, ST_APLAZADO);
           pausarActuadores();
           ultimo_estado = ST_ORINADO;
@@ -207,6 +218,7 @@ void fsm()
           actualizarLCD(true, ST_ESTABLE);
           confirmarLlamada();
           estado_actual = ST_ESTABLE;
+          aplazado = false;
         }
         break;
 
@@ -215,6 +227,7 @@ void fsm()
           actualizarLCD(true, ST_LEVANTADO);
           informarLevanto();
           estado_actual = ST_LEVANTADO;
+          aplazado = false;
         }
         break;
 
@@ -222,6 +235,7 @@ void fsm()
         {
           actualizarLCD(true, ultimo_estado);
           estado_actual = ultimo_estado;
+          aplazado = false;
         }
         break;
         
@@ -246,12 +260,16 @@ void fsm()
 //Definición de funciones propias
 void pausarActuadores(){
   tone(PIN_BUZZER, TONO_SOL, DURACION_BUZZER);
+  digitalWrite(PIN_LED_AZUL, LOW);
+  digitalWrite(PIN_LED_ROJO, LOW);
+  digitalWrite(PIN_LED_AMARILLO, LOW);
   informarPausaActuadores();
 }
 
 void llamadaPaciente()
 {
   tone(PIN_BUZZER, TONO_SI, DURACION_BUZZER);
+  digitalWrite(PIN_LED_AZUL, HIGH);
   informarPulsoPaciente();
 }
 

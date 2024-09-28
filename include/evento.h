@@ -16,8 +16,9 @@
 extern DHT sensor_humedad; //Objeto del sensor de humedad
 
 // Definición de Constantes
+#define TIEMPO_INTERVALO_BUZZER 60000
 #define TIEMPO_LEER_SENSORES    500     // Cada cuanto tiempo se leerán los sensores sin aplazo
-#define TIEMPO_TIMEOUT          120000     // Cada cuanto tiempo se producirá un evento de timeout
+#define TIEMPO_TIMEOUT          10000     // Cada cuanto tiempo se producirá un evento de timeout
 #define UMBRAL_PRESION          1000    // Valor de presión a detectar para que se considere que hay algo encima del sensor
 #define UMBRAL_HUMEDAD          50      // Valor de humedad a detectar para que se considere que haya orina en el papagayo
 
@@ -44,13 +45,15 @@ bool sensar_llamada(bool forzar, unsigned long tiempo_actual);
 bool sensar_aplazo(bool forzar, unsigned long tiempo_actual);
 bool sensar_confirmacion(bool forzar, unsigned long tiempo_actual);
 bool consultar_timeout(bool forzar, unsigned long tiempo_actual);
+bool sensar_timeout(bool forzar, unsigned long tiempo_actual);
 
-#define MAX_LECTORES 7
+#define MAX_LECTORES 6
 typedef bool (*lectorSensor)(bool forzar, unsigned long tiempo_actual); // Definimos como deben ser las funciones para leer sensores
 extern lectorSensor lector_sensor[MAX_LECTORES];
 
 //Variable que indica si el paciente llamó o no a la enfermera
 extern bool paciente_llamo;
+extern bool aplazado;
 
 //Estructura para guardar los datos de los pulsadores
 struct pulsador

@@ -36,8 +36,9 @@ void setup() {
 }
 
 void loop() {
-  if(nuevo_evento != EV_CONT) //Esto es para evitar spam
+  if(nuevo_evento != EV_CONTINUE) //Esto es para evitar spam
     Serial.println("Estado: "+estados_string[estado_actual]+"  Evento: "+eventos_string[nuevo_evento]);
 
   fsm();
+  delay(10);
 }
