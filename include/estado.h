@@ -53,5 +53,7 @@ void informarOrino              ();
 void informarLevanto            ();
 void informarConfirmacion       ();
 void informarPausaActuadores    ();
+void orinoPaciente              ();
+void pacienteSeLevanto          ();
 
 #endif

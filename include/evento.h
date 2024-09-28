@@ -16,9 +16,9 @@
 extern DHT sensor_humedad; //Objeto del sensor de humedad
 
 // Definición de Constantes
-#define TIEMPO_INTERVALO_BUZZER 60000
+#define TIEMPO_INTERVALO_BUZZER 3000
 #define TIEMPO_LEER_SENSORES    500     // Cada cuanto tiempo se leerán los sensores sin aplazo
-#define TIEMPO_TIMEOUT          10000     // Cada cuanto tiempo se producirá un evento de timeout
+#define TIEMPO_TIMEOUT          60000     // Cada cuanto tiempo se producirá un evento de timeout
 #define UMBRAL_PRESION          1000    // Valor de presión a detectar para que se considere que hay algo encima del sensor
 #define UMBRAL_HUMEDAD          50      // Valor de humedad a detectar para que se considere que haya orina en el papagayo
 
