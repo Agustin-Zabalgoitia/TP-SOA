@@ -13,7 +13,7 @@ unsigned long tiempo_evento_timeout = 0;
 String eventos_string[] = {"EV_CONTINUE", "EV_PULSO", "EV_ORINO", "EV_LEVANTO", "EV_CONFIRMO", "EV_APLAZO", "EV_TIMEOUT"};
 
 //Guardamos los punteros de las funciones que leen el estado de los sensores
-lectorSensor lector_sensor[] = {sensar_presion, sensar_humedad, consultar_llamada, sensar_llamada, sensar_aplazo, sensar_confirmacion};
+lectorSensor lector_sensor[] = {sensar_presion, sensar_humedad, sensar_llamada, sensar_aplazo, sensar_timeout, sensar_confirmacion};
 
 //Creamos variables para guardar el último evento ocurrido y el nuevo evento
 enum eventos nuevo_evento;
@@ -66,7 +66,9 @@ bool sensar_presion(bool forzar, unsigned long tiempo_actual)
 
     unsigned short valor_lectura = analogRead(PIN_PRESION);
 
-    if (valor_lectura <= UMBRAL_PRESION)
+    Serial.println(valor_lectura);
+
+    if (valor_lectura < UMBRAL_PRESION)
     {
       nuevo_evento = EV_LEVANTO;
       return true;

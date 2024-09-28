@@ -284,6 +284,7 @@ void actualizarLCD(bool forzar, estados estado)
     {
       case ST_ESTABLE:
       {
+        cambiarFondoLCD(VERDE);
         lcd.print("Paciente ");
         lcd.setCursor(0,1);
         lcd.print("estable");
@@ -292,6 +293,7 @@ void actualizarLCD(bool forzar, estados estado)
         
       case ST_PULSADO:
       {
+        cambiarFondoLCD(AZUL);
         lcd.print("Paciente ");
         lcd.setCursor(0,1);
         lcd.print("llamando!");
@@ -300,6 +302,7 @@ void actualizarLCD(bool forzar, estados estado)
 
       case ST_ORINADO:
       {
+        cambiarFondoLCD(AMARILLO);
         lcd.print("Paciente ");
         lcd.setCursor(0,1);
         lcd.print("orinado!");
@@ -308,6 +311,7 @@ void actualizarLCD(bool forzar, estados estado)
 
       case ST_LEVANTADO:
       {
+        cambiarFondoLCD(ROJO);
         lcd.print("Paciente ");
         lcd.setCursor(0,1);
         lcd.print("levanto!");
@@ -316,6 +320,7 @@ void actualizarLCD(bool forzar, estados estado)
 
       case ST_APLAZADO:
       {
+        cambiarFondoLCD(BLANCO);
         lcd.print("Aplazado");
       }
       break;
@@ -324,6 +329,34 @@ void actualizarLCD(bool forzar, estados estado)
       break;
     }
     
+}
+
+void cambiarFondoLCD(colores color){
+  switch (color)
+  {
+  case VERDE:
+    lcd.setRGB(0,255,0);
+    break;
+
+  case AZUL:
+    lcd.setRGB(0,0,255);
+    break;
+  
+  case AMARILLO:
+    lcd.setRGB(255,255,0);
+    break;
+
+  case ROJO:
+    lcd.setRGB(255,0,0);
+    break;
+
+  case BLANCO:
+    lcd.setRGB(255,255,255);
+    break;
+
+  default:
+    break;
+  }
 }
 
 /*

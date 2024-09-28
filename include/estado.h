@@ -20,6 +20,9 @@
 
 extern rgb_lcd lcd;
 
+//Definición de enums para los colores del fondo del LCD
+enum colores {VERDE, AZUL, AMARILLO, ROJO, BLANCO};
+
 #define TIEMPO_ENTRE_CICLOS_DE_EJECUCION    50 //milisegundos
 
 //Definición de los tonos del buzzer
@@ -37,9 +40,6 @@ extern String estados_string[MAX_ESTADOS];
 extern enum estados estado_actual;
 extern enum estados ultimo_estado;
 
-//Definición de enums para los colores del fondo del LCD
-enum colores {AZUL, AMARILLO, ROJO};
-
 //Funciones
 void get_event                  ();
 void fsm                        (); //Máquina de estados
@@ -47,6 +47,7 @@ void pausarActuadores           ();
 void llamadaPaciente            ();
 void confirmarLlamada           ();
 void actualizarLCD              (bool, estados);
+void cambiarFondoLCD            (colores);
 //Funciones encargadas de informar, de momento mediante Serial.print, que ocurrió algo
 void informarPulsoPaciente      ();
 void informarOrino              ();

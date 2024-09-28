@@ -1,17 +1,12 @@
 #include <estado.h>
 
-<<<<<<< HEAD
 #define BAUDRATE      9600
-=======
-#define BAUDRATE 9600
->>>>>>> fisico
 
 void setup() {
   Serial.begin(BAUDRATE);
 
   Wire.begin(PIN_LCD_SDA, PIN_LCD_SCL);  
   lcd.begin(LCD_COLUMNAS, LCD_FILAS);
-  lcd.backlight();
 
   // Configuracion inicial del LCD
   lcd.clear();
@@ -35,14 +30,10 @@ void setup() {
 
   //Configuramos los actuadores
   pinMode(PIN_BUZZER, OUTPUT);
-  //Configuramos el lcd
-  Wire.begin(PIN_SDA, PIN_SCL);
-  lcd.begin(LCD_COLUMNAS, LCD_FILAS);
-  apagarFondoLCD();
 }
 
 void loop() {
-  if(nuevo_evento != EV_CONT) //Esto es para evitar spam
+  if(nuevo_evento != EV_CONTINUE) //Esto es para evitar spam
     Serial.println("Estado: "+estados_string[estado_actual]+"  Evento: "+eventos_string[nuevo_evento]);
 
   fsm();
