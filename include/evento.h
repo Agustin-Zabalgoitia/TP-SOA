@@ -2,24 +2,19 @@
 #define EVENTO_H_
 
 #include <Arduino.h>
-#include <DHT.h> //Biblioteca necesaria para usar el sensor de humedad
 
 //Pines de los sensores
-#define PIN_HUMEDAD             15
-#define PIN_PRESION             2
-#define PIN_PULSADOR            4
+#define PIN_HUMEDAD             2
+#define PIN_PRESION             4
+#define PIN_PULSADOR            15
 #define PIN_PULSADOR_APLAZAR    18
 #define PIN_PULSADOR_CONFIRMAR  19
-
-//Sensor de humedad
-#define DHTYPE DHT22 //Tipo de sensor DHT
-extern DHT sensor_humedad; //Objeto del sensor de humedad
 
 // Definición de Constantes
 #define TIEMPO_LEER_SENSORES    500     // Cada cuanto tiempo se leerán los sensores sin aplazo
 #define TIEMPO_TIMEOUT          120000     // Cada cuanto tiempo se producirá un evento de timeout
 #define UMBRAL_PRESION          1000    // Valor de presión a detectar para que se considere que hay algo encima del sensor
-#define UMBRAL_HUMEDAD          50      // Valor de humedad a detectar para que se considere que haya orina en el papagayo
+#define UMBRAL_HUMEDAD          1000    // Valor de humedad a detectar para que se considere que haya orina en el papagayo
 
 //Variables de tiempo de los sensores
 extern unsigned long ultimo_tiempo_actual;

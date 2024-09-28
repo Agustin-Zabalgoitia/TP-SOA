@@ -3,13 +3,10 @@
 
 #include <evento.h>
 #include <Wire.h>
-#include <LiquidCrystal_I2C.h>
+#include "rgb_lcd.h"
 
 //Pines de los actuadores
-#define PIN_BUZZER          0
-#define PIN_LED_AMARILLO    17
-#define PIN_LED_AZUL        16
-#define PIN_LED_ROJO        5
+#define PIN_BUZZER        32
 
 //Configuración LCD
 #define PIN_LCD_SDA             21
@@ -21,7 +18,7 @@
 #define LCD_ADDR                0x27
 #define TIEMPO_ESCRITURA_LCD    1000    //en milisegundos
 
-extern LiquidCrystal_I2C lcd;
+extern rgb_lcd lcd;
 
 #define TIEMPO_ENTRE_CICLOS_DE_EJECUCION    50 //milisegundos
 
@@ -39,6 +36,9 @@ extern String estados_string[MAX_ESTADOS];
 
 extern enum estados estado_actual;
 extern enum estados ultimo_estado;
+
+//Definición de enums para los colores del fondo del LCD
+enum colores {AZUL, AMARILLO, ROJO};
 
 //Funciones
 void get_event                  ();

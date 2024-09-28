@@ -1,6 +1,10 @@
 #include <estado.h>
 
+<<<<<<< HEAD
 #define BAUDRATE      9600
+=======
+#define BAUDRATE 9600
+>>>>>>> fisico
 
 void setup() {
   Serial.begin(BAUDRATE);
@@ -23,16 +27,18 @@ void setup() {
 
   //Configuramos los sensores
   pinMode(PIN_PRESION, INPUT);
-  pinMode(PIN_PULSADOR, INPUT);
-  pinMode(PIN_PULSADOR_APLAZAR, INPUT);
-  pinMode(PIN_PULSADOR_CONFIRMAR, INPUT);
-  sensor_humedad.begin(); //El sensor de humedad empieza a funcionar
+  pinMode(PIN_HUMEDAD, INPUT);
+  pinMode(PIN_PULSADOR, INPUT_PULLUP);
+  pinMode(PIN_PULSADOR_APLAZAR, INPUT_PULLUP);
+  pinMode(PIN_PULSADOR_CONFIRMAR, INPUT_PULLUP);
+
 
   //Configuramos los actuadores
-  pinMode(PIN_LED_AMARILLO, OUTPUT);
-  pinMode(PIN_LED_AZUL, OUTPUT);
-  pinMode(PIN_LED_ROJO, OUTPUT);
   pinMode(PIN_BUZZER, OUTPUT);
+  //Configuramos el lcd
+  Wire.begin(PIN_SDA, PIN_SCL);
+  lcd.begin(LCD_COLUMNAS, LCD_FILAS);
+  apagarFondoLCD();
 }
 
 void loop() {

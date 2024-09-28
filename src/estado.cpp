@@ -7,7 +7,7 @@ enum estados estado_actual;
 enum estados ultimo_estado;
 
 //Configuración inicial del display
-LiquidCrystal_I2C lcd(LCD_ADDR, LCD_COLUMNAS, LCD_FILAS);
+rgb_lcd lcd;
 unsigned long tiempo_lcd = 0; //temporizador del lcd
 
 void get_event()
