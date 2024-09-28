@@ -151,6 +151,7 @@ void fsm()
         {
           actualizarLCD(true, ST_ESTABLE);
           confirmarLlamada();
+          pausarActuadores();
           estado_actual = ST_ESTABLE;
         }
         break;
@@ -176,6 +177,10 @@ void fsm()
         case EV_CONTINUE:
         {
           actualizarLCD(false, ST_ORINADO);
+          if (millis() - ultima_llamada_buzzer > TIEMPO_INTERVALO_BUZZER){
+            orinoPaciente();
+            ultima_llamada_buzzer = millis();
+          }
         }
         break;
 
@@ -200,6 +205,10 @@ void fsm()
         case EV_CONTINUE:
         {
           actualizarLCD(false, ST_LEVANTADO);
+          if (millis() - ultima_llamada_buzzer > TIEMPO_INTERVALO_BUZZER){
+            pacienteSeLevanto();
+            ultima_llamada_buzzer = millis();
+          }
         }
         break;
 
@@ -217,6 +226,7 @@ void fsm()
         {
           actualizarLCD(true, ST_ESTABLE);
           confirmarLlamada();
+          pausarActuadores();
           estado_actual = ST_ESTABLE;
           aplazado = false;
         }
@@ -260,16 +270,23 @@ void fsm()
 //Definición de funciones propias
 void pausarActuadores(){
   tone(PIN_BUZZER, TONO_SOL, DURACION_BUZZER);
-  digitalWrite(PIN_LED_AZUL, LOW);
-  digitalWrite(PIN_LED_ROJO, LOW);
-  digitalWrite(PIN_LED_AMARILLO, LOW);
   informarPausaActuadores();
+}
+
+// Activa los actuadores cuando el paciente orinó
+void orinoPaciente(){
+  tone(PIN_BUZZER, TONO_SI, DURACION_BUZZER);
+  informarOrino();
+}
+// Activa los actuadores cuando el paciente se levantó
+void pacienteSeLevanto(){
+  tone(PIN_BUZZER, TONO_SI, DURACION_BUZZER);
+  informarLevanto();
 }
 
 void llamadaPaciente()
 {
   tone(PIN_BUZZER, TONO_SI, DURACION_BUZZER);
-  digitalWrite(PIN_LED_AZUL, HIGH);
   informarPulsoPaciente();
 }
 

@@ -68,7 +68,7 @@ bool sensar_presion(bool forzar, unsigned long tiempo_actual)
 
     unsigned short valor_lectura = analogRead(PIN_PRESION);
 
-    Serial.println(valor_lectura);
+    //Serial.println(valor_lectura);
 
     if (valor_lectura < UMBRAL_PRESION)
     {

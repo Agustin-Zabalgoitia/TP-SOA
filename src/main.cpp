@@ -27,7 +27,6 @@ void setup() {
   pinMode(PIN_PULSADOR_APLAZAR, INPUT_PULLUP);
   pinMode(PIN_PULSADOR_CONFIRMAR, INPUT_PULLUP);
 
-
   //Configuramos los actuadores
   pinMode(PIN_BUZZER, OUTPUT);
 }
@@ -37,5 +36,4 @@ void loop() {
     Serial.println("Estado: "+estados_string[estado_actual]+"  Evento: "+eventos_string[nuevo_evento]);
 
   fsm();
-  delay(10);
 }
