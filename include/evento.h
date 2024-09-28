@@ -11,6 +11,7 @@
 #define PIN_PULSADOR_CONFIRMAR  0
 
 // Definición de Constantes
+#define TIEMPO_INTERVALO_BUZZER 60000
 #define TIEMPO_LEER_SENSORES    500     // Cada cuanto tiempo se leerán los sensores sin aplazo
 #define TIEMPO_TIMEOUT          120000     // Cada cuanto tiempo se producirá un evento de timeout
 #define UMBRAL_PRESION          500    // Valor de presión a detectar para que se considere que hay algo encima del sensor
@@ -41,11 +42,13 @@ bool sensar_confirmacion(bool forzar, unsigned long tiempo_actual);
 bool sensar_timeout(bool forzar, unsigned long tiempo_actual);
 
 #define MAX_LECTORES 6
+#define MAX_LECTORES 6
 typedef bool (*lectorSensor)(bool forzar, unsigned long tiempo_actual); // Definimos como deben ser las funciones para leer sensores
 extern lectorSensor lector_sensor[MAX_LECTORES];
 
 //Variable que indica si el paciente llamó o no a la enfermera
 extern bool paciente_llamo;
+extern bool aplazado;
 
 //Estructura para guardar los datos de los pulsadores
 struct pulsador

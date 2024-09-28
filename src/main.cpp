@@ -37,4 +37,5 @@ void loop() {
     Serial.println("Estado: "+estados_string[estado_actual]+"  Evento: "+eventos_string[nuevo_evento]);
 
   fsm();
+  delay(10);
 }

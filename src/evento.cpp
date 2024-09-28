@@ -8,6 +8,8 @@ unsigned long tiempo_lectura_presion = 0;
 unsigned long tiempo_lectura_humedad = 0;
 unsigned long tiempo_evento_llamada = 0;
 unsigned long tiempo_evento_timeout = 0;
+bool aplazado = false;
+
 
 //Guardamos los nombres de los eventos para informar por pantalla
 String eventos_string[] = {"EV_CONTINUE", "EV_PULSO", "EV_ORINO", "EV_LEVANTO", "EV_CONFIRMO", "EV_APLAZO", "EV_TIMEOUT"};
@@ -89,6 +91,11 @@ bool sensar_aplazo(bool forzar, unsigned long tiempo_actual)
 
 bool sensar_timeout(bool forzar, unsigned long tiempo_actual)
 {
+  if(aplazado == false)
+  {
+    return false;
+  }
+
   if (tiempo_actual == 0)
     tiempo_actual = millis();
 
