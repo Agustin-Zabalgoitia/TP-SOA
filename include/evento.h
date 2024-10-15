@@ -2,6 +2,10 @@
 #define EVENTO_H_
 
 #include <Arduino.h>
+#include <WiFi.h>
+#include "PubSubClient.h"
+#include <ArduinoJson.h>
+
 
 //Pines de los sensores
 #define PIN_HUMEDAD             35
@@ -14,7 +18,7 @@
 #define TIEMPO_INTERVALO_BUZZER 3000
 #define TIEMPO_LEER_SENSORES    500     // Cada cuanto tiempo se leerán los sensores sin aplazo
 #define TIEMPO_TIMEOUT          60000   // Cada cuanto tiempo se producirá un evento de timeout
-#define UMBRAL_PRESION          250     // Valor de presión a detectar para que se considere que hay algo encima del sensor
+#define UMBRAL_PRESION          250  // 250   // Valor de presión a detectar para que se considere que hay algo encima del sensor
 #define UMBRAL_HUMEDAD          2000    // Valor de humedad a detectar para que se considere que haya orina en el papagayo
 
 //Variables de tiempo de los sensores
@@ -41,6 +45,8 @@ bool sensar_aplazo(bool forzar, unsigned long tiempo_actual);
 bool sensar_confirmacion(bool forzar, unsigned long tiempo_actual);
 bool sensar_timeout(bool forzar, unsigned long tiempo_actual);
 
+void callback(char*, byte*, unsigned int);
+
 #define MAX_LECTORES 6
 #define MAX_LECTORES 6
 typedef bool (*lectorSensor)(bool forzar, unsigned long tiempo_actual); // Definimos como deben ser las funciones para leer sensores
@@ -62,5 +68,32 @@ struct pulsador
 extern pulsador pulsadorLlamar, pulsadorAplazar, pulsadorConfirmar;
 
 bool sensar_pulsador(pulsador*, eventos); //Función para obtener el valor de cualquier pulsador
+
+/////
+
+
+#define DESACTIVATE '0' 
+#define ACTIVATE    '1'
+
+
+extern const char* ssid;
+extern const char* password;
+extern const char* mqttServer;
+extern const char* user_name;
+extern const char* user_pass;  
+
+extern const char * topic_temp;
+extern const char * topic_luz;
+
+extern int port;
+extern String stMac;
+extern char mac[50];
+extern char clientId[50];
+extern long last_time;
+
+extern WiFiClient espClient;
+extern PubSubClient client;
+
+extern bool recibido_mensaje_aplazo;
 
 #endif

@@ -56,5 +56,10 @@ void informarConfirmacion       ();
 void informarPausaActuadores    ();
 void orinoPaciente              ();
 void pacienteSeLevanto          ();
+void wifiConnect                ();
+void callback                   (char*, byte*, unsigned int);
+void mqttReconnect              ();
+String generateJson             ();
+void mqttInformarEstado         (const char*, const char*);
 
 #endif

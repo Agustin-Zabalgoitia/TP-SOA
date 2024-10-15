@@ -401,17 +401,20 @@ void cambiarFondoLCD(colores color){
 
 void informarPulsoPaciente()
 {
-  Serial.println("El paciente ha pulsado el botón de llamada.");
+    Serial.println("El paciente ha pulsado el botón de llamada.");
+    mqttInformarEstado("/smartcare/pulso", "El paciente ha llamado");    
 }
 
 void informarOrino()
 {
   Serial.println("El paciente se ha orinado.");
+  mqttInformarEstado("/smartcare/orino", "El paciente se ha orinado");    
 }
 
 void informarLevanto()
 {
   Serial.println("El paciente se ha levantado.");
+  mqttInformarEstado("/smartcare/levanto", "El paciente se ha levantado");    
 }
 
 void informarConfirmacion()
@@ -422,4 +425,16 @@ void informarConfirmacion()
 void informarPausaActuadores()
 {
   Serial.println("Se han pausado los actuadores."); //Esto todavía no ocurre
+  mqttInformarEstado("/smartcare/levanto", "El paciente se ha levantado");    
+}
+
+// Hay que hacer que la placa se conecte al servidor mqtt antes de que esta funcion funcione
+void mqttInformarEstado(const char* topico, const char* mensaje)
+{    
+    //Se publica un mensaje en un topico del broker
+    client.publish(topico, mensaje);
+    
+    // Serial.println("envio a Broker: ");
+    // Serial.println(mensaje);
+    // Serial.println("");
 }

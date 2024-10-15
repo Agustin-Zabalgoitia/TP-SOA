@@ -1,4 +1,7 @@
 #include <evento.h>
+#include <WiFi.h>
+#include "PubSubClient.h"
+#include <ArduinoJson.h>
 
 //No se pueden declarar valores de variables en el archivo header
 //por lo que se tiene que ejecutar este código para que se
@@ -8,8 +11,32 @@ unsigned long tiempo_lectura_presion = 0;
 unsigned long tiempo_lectura_humedad = 0;
 unsigned long tiempo_evento_llamada = 0;
 unsigned long tiempo_evento_timeout = 0;
-bool aplazado = false;
+unsigned long tiempo_lectura_aplazo = 0;
 
+bool aplazado = false;
+bool recibido_mensaje_aplazo = false;
+
+#define DESACTIVATE '0' 
+#define ACTIVATE    '1'
+
+
+const char* ssid        = "SO Avanzados";
+const char* password    = "SOA.2019";
+const char* mqttServer  = "broker.emqx.io";
+const char* user_name   = "";
+const char* user_pass   = "";
+
+const char * topic_temp  = "/casa/temperatura";
+const char * topic_luz = "/casa/luz";
+
+int port = 1883;
+String stMac;
+char mac[50];
+char clientId[50];
+long last_time= millis();
+
+WiFiClient espClient;
+PubSubClient client(espClient);
 
 //Guardamos los nombres de los eventos para informar por pantalla
 String eventos_string[] = {"EV_CONTINUE", "EV_PULSO", "EV_ORINO", "EV_LEVANTO", "EV_CONFIRMO", "EV_APLAZO", "EV_TIMEOUT"};
@@ -86,7 +113,30 @@ bool sensar_confirmacion(bool forzar, unsigned long tiempo_actual)
 
 bool sensar_aplazo(bool forzar, unsigned long tiempo_actual)
 {
-  return sensar_pulsador(&pulsadorAplazar, EV_APLAZO);
+  if (tiempo_actual == 0)
+  tiempo_actual = millis();
+
+  // obtenemos el tiempo transcurrido entre el tiempo actual y la última vez que se midió la presión
+  unsigned long diferencia = (forzar) ? (TIEMPO_LEER_SENSORES) : (tiempo_actual - tiempo_lectura_aplazo);
+
+  if (diferencia >= TIEMPO_LEER_SENSORES)
+  {
+    tiempo_lectura_aplazo = tiempo_actual;
+
+    //Serial.println(valor_lectura);
+
+    if(recibido_mensaje_aplazo) {
+      nuevo_evento = EV_APLAZO;
+
+      recibido_mensaje_aplazo = false;
+    
+      return true;
+    }
+
+  }
+  return false;
+
+  // return sensar_pulsador(&pulsadorAplazar, EV_APLAZO);
 }
 
 bool sensar_timeout(bool forzar, unsigned long tiempo_actual)
@@ -125,4 +175,32 @@ bool sensar_pulsador(pulsador *pulsador, eventos evento)
   pulsador->estado_anterior = pulsador->estado_actual;
   
   return cambio;
+}
+
+// Funciones para manejo del aplazo desde el teléfono
+
+//Funcion Callback que recibe los mensajes enviados por lo dispositivos
+void callback(char* topic, byte* message, unsigned int length) 
+{
+  /*
+      No se que tan bin funcione esto, nuestro codigo recibe eventos al chequear constantemente los sensores
+      Esto genera un nuevo evento en el momento en el que se recibe un mensaje.
+  */
+  char cMessage=char(*message);
+
+
+  // Serial.print("Se recibio mensaje en el topico: ");
+  // Serial.println(topic);
+  // Serial.print("Mensaje Recibido: ");
+  // Serial.println(cMessage);
+  // Serial.println();
+
+  
+
+  if(cMessage == 'a'){
+    Serial.println("GENERACION EVENTO APLAZO");
+    recibido_mensaje_aplazo = true;
+  }
+    
+    
 }
