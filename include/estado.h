@@ -21,7 +21,7 @@
 extern rgb_lcd lcd;
 
 //Definición de enums para los colores del fondo del LCD
-enum colores {VERDE, AZUL, AMARILLO, ROJO, BLANCO};
+enum colores {VERDE, AZUL, AMARILLO, ROJO, ROSA, BLANCO};
 
 #define TIEMPO_ENTRE_CICLOS_DE_EJECUCION    50 //milisegundos
 

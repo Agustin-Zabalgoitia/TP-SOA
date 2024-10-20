@@ -4,8 +4,6 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include "PubSubClient.h"
-#include <ArduinoJson.h>
-
 
 //Pines de los sensores
 #define PIN_HUMEDAD             35
@@ -45,6 +43,7 @@ bool sensar_aplazo(bool forzar, unsigned long tiempo_actual);
 bool sensar_confirmacion(bool forzar, unsigned long tiempo_actual);
 bool sensar_timeout(bool forzar, unsigned long tiempo_actual);
 
+//Función para detectar datos envíados desde el celular
 void callback(char*, byte*, unsigned int);
 
 #define MAX_LECTORES 6
@@ -69,12 +68,17 @@ extern pulsador pulsadorLlamar, pulsadorAplazar, pulsadorConfirmar;
 
 bool sensar_pulsador(pulsador*, eventos); //Función para obtener el valor de cualquier pulsador
 
-/////
+//Variables para la configuración del Wifi y la comunicación mediante MQTT
+#define TAMANIO_STRING_VALOR_SENSOR 10  //Define el tamaño que tendrá el string que guardará el valor de un sensor
+#define TAMANIO_MENSAJE_MQTT        100
 
-
-#define DESACTIVATE '0' 
-#define ACTIVATE    '1'
-
+//Definición de tópicos de MQTT
+#define TOPICO_LEVANTO      "/smartcare/levanto"
+#define TOPICO_CONFIRMADO   "/smartcare/confirmado"
+#define TOPICO_PAUSADO      "/smartcare/pausado"
+#define TOPICO_ORINO        "/smartcare/orino"
+#define TOPICO_PULSO        "/smartcare/pulso"
+#define TOPICO_APLAZO       "/smartcare/aplazo"
 
 extern const char* ssid;
 extern const char* password;

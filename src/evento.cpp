@@ -13,27 +13,21 @@ unsigned long tiempo_evento_llamada = 0;
 unsigned long tiempo_evento_timeout = 0;
 unsigned long tiempo_lectura_aplazo = 0;
 
+//Variables para detectar el aplazo
 bool aplazado = false;
 bool recibido_mensaje_aplazo = false;
 
-#define DESACTIVATE '0' 
-#define ACTIVATE    '1'
-
-
+//Configuración del wifi y el servidor mqtt
 const char* ssid        = "SO Avanzados";
 const char* password    = "SOA.2019";
 const char* mqttServer  = "broker.emqx.io";
 const char* user_name   = "";
 const char* user_pass   = "";
 
-const char * topic_temp  = "/casa/temperatura";
-const char * topic_luz = "/casa/luz";
-
 int port = 1883;
 String stMac;
 char mac[50];
 char clientId[50];
-long last_time= millis();
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -123,8 +117,6 @@ bool sensar_aplazo(bool forzar, unsigned long tiempo_actual)
   {
     tiempo_lectura_aplazo = tiempo_actual;
 
-    //Serial.println(valor_lectura);
-
     if(recibido_mensaje_aplazo) {
       nuevo_evento = EV_APLAZO;
 
@@ -135,8 +127,6 @@ bool sensar_aplazo(bool forzar, unsigned long tiempo_actual)
 
   }
   return false;
-
-  // return sensar_pulsador(&pulsadorAplazar, EV_APLAZO);
 }
 
 bool sensar_timeout(bool forzar, unsigned long tiempo_actual)
@@ -182,25 +172,9 @@ bool sensar_pulsador(pulsador *pulsador, eventos evento)
 //Funcion Callback que recibe los mensajes enviados por lo dispositivos
 void callback(char* topic, byte* message, unsigned int length) 
 {
-  /*
-      No se que tan bin funcione esto, nuestro codigo recibe eventos al chequear constantemente los sensores
-      Esto genera un nuevo evento en el momento en el que se recibe un mensaje.
-  */
   char cMessage=char(*message);
 
-
-  // Serial.print("Se recibio mensaje en el topico: ");
-  // Serial.println(topic);
-  // Serial.print("Mensaje Recibido: ");
-  // Serial.println(cMessage);
-  // Serial.println();
-
-  
-
   if(cMessage == 'a'){
-    Serial.println("GENERACION EVENTO APLAZO");
     recibido_mensaje_aplazo = true;
   }
-    
-    
 }

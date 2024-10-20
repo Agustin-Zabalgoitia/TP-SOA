@@ -385,6 +385,10 @@ void cambiarFondoLCD(colores color){
     lcd.setRGB(255,0,0);
     break;
 
+  case ROSA:
+    lcd.setRGB(255,0,255);
+    break;
+
   case BLANCO:
     lcd.setRGB(255,255,255);
     break;
@@ -402,39 +406,53 @@ void cambiarFondoLCD(colores color){
 void informarPulsoPaciente()
 {
     Serial.println("El paciente ha pulsado el botón de llamada.");
-    mqttInformarEstado("/smartcare/pulso", "El paciente ha llamado");    
+    mqttInformarEstado(TOPICO_PULSO, "El paciente ha llamado");    
 }
 
 void informarOrino()
 {
   Serial.println("El paciente se ha orinado.");
-  mqttInformarEstado("/smartcare/orino", "El paciente se ha orinado");    
+
+  int valorHumedad = analogRead(PIN_PRESION);
+  char valorHumedadStr[TAMANIO_STRING_VALOR_SENSOR];
+  itoa(valorHumedad, valorHumedadStr, TAMANIO_STRING_VALOR_SENSOR);
+ 
+  char mensaje[TAMANIO_MENSAJE_MQTT]; 
+  strcpy(mensaje, "El paciente se ha orinado, humedad: ");
+  strcat(mensaje, valorHumedadStr);
+ 
+  mqttInformarEstado(TOPICO_ORINO, mensaje);
 }
 
 void informarLevanto()
 {
   Serial.println("El paciente se ha levantado.");
-  mqttInformarEstado("/smartcare/levanto", "El paciente se ha levantado");    
+ 
+  int valorPresion = analogRead(PIN_PRESION);
+  char valorPresionStr[TAMANIO_STRING_VALOR_SENSOR];
+  itoa(valorPresion, valorPresionStr, TAMANIO_STRING_VALOR_SENSOR);
+ 
+  char mensaje[TAMANIO_MENSAJE_MQTT]; 
+  strcpy(mensaje, "El paciente se ha levantado, presion: ");
+  strcat(mensaje, valorPresionStr);
+ 
+  mqttInformarEstado(TOPICO_LEVANTO, mensaje);
 }
 
 void informarConfirmacion()
 {
   Serial.println("Se ha confirmado la llamada del paciente.");
+  mqttInformarEstado(TOPICO_CONFIRMADO, "Se ha confirmado la llamada del paciente.");
 }
 
 void informarPausaActuadores()
 {
-  Serial.println("Se han pausado los actuadores."); //Esto todavía no ocurre
-  mqttInformarEstado("/smartcare/levanto", "El paciente se ha levantado");    
+  Serial.println("Se han pausado los actuadores.");
+  mqttInformarEstado(TOPICO_PAUSADO, "Se han pausado los actuadores.");
 }
 
-// Hay que hacer que la placa se conecte al servidor mqtt antes de que esta funcion funcione
 void mqttInformarEstado(const char* topico, const char* mensaje)
 {    
     //Se publica un mensaje en un topico del broker
     client.publish(topico, mensaje);
-    
-    // Serial.println("envio a Broker: ");
-    // Serial.println(mensaje);
-    // Serial.println("");
 }
